@@ -1,66 +1,109 @@
-const WhoWon = ({
-  namePlayer1,
-  valuePlayer1,
-  namePlayer2,
-  valuePlayer2,
-  unit,
-}) => {
-  const compareValueAndRange = (playerValue, playerRange) => {
-    const rangeMin = Number(playerRange.range[0]);
-    const rangeMax = Number(playerRange.range[1]);
-    const val = Number(playerValue.value);
+import { useEffect, useRef } from "react";
 
-    return val < rangeMin
-      ? playerRange.name + " WINS!"
-      : val >= rangeMin && val <= rangeMax
-      ? "IT'S A TIE!"
-      : playerValue.name + " WINS!";
+const WhoWon = ({
+  player1,
+  player2,
+  unit,
+  score,
+  setScore,
+  verifyIfDataIsCorrect,
+  result,
+  setResult,
+  isLoading,
+}) => {
+  const previousPlayers = useRef({ player1, player2 });
+
+  useEffect(() => {
+    if (
+      previousPlayers.current.player1 !== player1 &&
+      previousPlayers.current.player2 !== player2 &&
+      verifyIfDataIsCorrect(player1) &&
+      verifyIfDataIsCorrect(player2)
+    ) {
+      setResult(countScore());
+      previousPlayers.current = { player1, player2 };
+    }
+  }, [player1, player2]);
+
+  const compareValueAndRange = (player1, player2) => {
+    let rangeMin;
+    let rangeMax;
+    let val;
+
+    if (player1.length > 1) {
+      rangeMin = Number(player1[0]);
+      rangeMax = Number(player1[1]);
+      val = Number(player2);
+
+      if (val < rangeMin) {
+        setScore((score) => ({ ...score, player1: score.player1++ }));
+        return player1.name + " WINS!";
+      } else if (val >= rangeMax) {
+        setScore((score) => ({ ...score, player2: score.player2++ }));
+        return player2.name + " WINS!";
+      } else {
+        return "IT'S A TIE!";
+      }
+    } else {
+      rangeMin = Number(player2[0]);
+      rangeMax = Number(player2[1]);
+      val = Number(player1);
+      if (val < rangeMin) {
+        setScore((score) => ({ ...score, player2: score.player2++ }));
+        return player2.name + " WINS!";
+      } else if (val >= rangeMax) {
+        setScore((score) => ({ ...score, player1: score.player1++ }));
+        return player1.name + " WINS!";
+      } else {
+        return "IT'S A TIE!";
+      }
+    }
   };
 
   const compareValues = (player1, player2) => {
-    const val1 = Number(player1);
-    const val2 = Number(player2);
+    let val1;
+    let val2;
 
-    return val1 === val2
-      ? "IT'S A TIE!"
-      : val1 > val2
-      ? namePlayer1 + " WINS!"
-      : namePlayer2 + " WINS!";
+    if (Array.isArray(player1.value) && Array.isArray(player2.value)) {
+      val1 = Number(player1.value[0]);
+      val2 = Number(player2.value[0]);
+    } else {
+      val1 = Number(player1.value);
+      val2 = Number(player2.value);
+    }
+
+    if (val1 > val2) {
+      setScore((score) => ({ ...score, player1: score.player1++ }));
+      return player1.name + " WINS!";
+    } else if (val1 < val2) {
+      setScore((score) => ({ ...score, player2: score.player2++ }));
+      return player2.name + " WINS!";
+    } else {
+      return "IT'S A TIE!";
+    }
   };
 
-  let result;
-
-  if (unit === "mess") {
-    result = compareValues(valuePlayer1, valuePlayer2);
-  } else if (unit === "crew") {
-    const isRangeCrew1 = valuePlayer1.length > 1;
-    const isRangeCrew2 = valuePlayer2.length > 1;
-    result =
-      isRangeCrew1 && isRangeCrew2
-        ? "IT'S A TIE!"
-        : isRangeCrew1
-        ? compareValueAndRange(
-            { value: valuePlayer2, name: namePlayer2 },
-            { range: valuePlayer1, name: namePlayer1 }
-          )
-        : isRangeCrew2
-        ? compareValueAndRange(
-            { value: valuePlayer1, name: namePlayer1 },
-            { range: valuePlayer2, name: namePlayer2 }
-          )
-        : compareValues(valuePlayer1[0], valuePlayer2[0]);
-  }
+  const countScore = () => {
+    if (unit === "mess") {
+      return compareValues(player1, player2);
+    } else if (unit === "crew") {
+      const isRangeCrew1 = player1.value.length > 1;
+      const isRangeCrew2 = player2.value.length > 1;
+      if (isRangeCrew1 && isRangeCrew2) {
+        return "IT'S A TIE!";
+      } else if (isRangeCrew1 || isRangeCrew2) {
+        return compareValueAndRange(player1.value, player2.value);
+      } else {
+        return compareValues(player1, player2);
+      }
+    }
+  };
 
   return (
-    <div
-      style={{
-        backgroundColor: result.includes("TIE!") ? "yellow" : "orange",
-        padding: "20px",
-        borderRadius: "20px",
-        fontWeight: "bold",
-      }}
-    >
-      {result}
+    <div style={{ display: "flex", fontSize: "32px" }}>
+      <div>{score.player1}</div>
+      <span>:</span>
+      <div>{score.player2}</div>
     </div>
   );
 };

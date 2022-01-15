@@ -1,8 +1,14 @@
 import { Card, CardHeader, CardContent, Box, Typography } from "@mui/material";
 
-const PlayersCard = ({ title, subtitle, content, footer }) => {
+const PlayersCard = ({ title, subtitle, content, footer, nameOfTheWinner }) => {
   return (
-    <Card sx={{ width: 250, height: 300 }}>
+    <Card
+      sx={{
+        width: 250,
+        height: 300,
+        backgroundColor: title === nameOfTheWinner ? "lightgreen" : "white",
+      }}
+    >
       <CardHeader
         title={title}
         subheader={subtitle}

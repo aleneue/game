@@ -1,37 +1,27 @@
 import { useEffect, useState } from "react";
-import PlayButton from "./components/PlayButton";
 import Cards from "./components/Cards";
-import ClipLoader from "react-spinners/ClipLoader";
 import SelectPlayersType from "./components/SelectPlayersType";
 import Layout from "./components/Layout";
+import WhoWon from "./components/WhoWon";
+import Buttons from "./components/Buttons";
+import ClipLoader from "react-spinners/ClipLoader";
 
 const App = () => {
   const [player1, setPlayer1] = useState();
   const [player2, setPlayer2] = useState();
   const [playersMaxId, setPlayersMaxId] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isPlayer1Loading, setIsPlayer1Loading] = useState(false);
+  const [isPlayer2Loading, setIsPlayer2Loading] = useState(false);
   const [playersType, setPlayersType] = useState("");
   const [unit, setUnit] = useState("");
+  const [score, setScore] = useState({ player1: 0, player2: 0 });
+  const [result, setResult] = useState("");
+
+  const isLoading = isPlayer1Loading || isPlayer2Loading;
 
   useEffect(() => {
     playersType && getData();
   }, [playersType]);
-
-  useEffect(() => {
-    player1 && rerollIfIncompleteData(player1, setPlayer1);
-  }, [player1]);
-
-  useEffect(() => {
-    player2 && rerollIfIncompleteData(player2, setPlayer2);
-  }, [player2]);
-
-  useEffect(() => {
-    player1 &&
-      player2 &&
-      verifyIfDataIsCorrect(player1) &&
-      verifyIfDataIsCorrect(player2) &&
-      setIsLoading(false);
-  }, [player1, player2]);
 
   const getData = () => {
     fetch(`https://swapi.dev/api/${playersType}/`)
@@ -54,13 +44,13 @@ const App = () => {
       });
   };
 
-  const getPlayerData = (setPlayer, id) => {
-    setIsLoading(true);
+  const getPlayerData = (setPlayer, id, setLoading) => {
+    setLoading(true);
     fetch(`https://swapi.dev/api/${playersType}/${id}`)
       .then((res) => res.json())
       .then((data) => {
         const { name, detail } = data;
-        return setPlayer({
+        const player = {
           id,
           name,
           value:
@@ -68,7 +58,11 @@ const App = () => {
               ? data.mass?.replace(",", "")
               : data.crew?.replace(",", "").split("-"),
           detail,
-        });
+        };
+        if (!rerollIfIncompleteData(player, setPlayer, setLoading)) {
+          setPlayer(player);
+          setLoading(false);
+        }
       })
       .catch((error) => console.log("ERROR", error));
   };
@@ -79,7 +73,7 @@ const App = () => {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   };
 
-  const rerollIfIncompleteData = (player, setPlayer) => {
+  const rerollIfIncompleteData = (player, setPlayer, setLoading) => {
     // IF DATA ARE NOT CORRECT
     // PICK NEW NUMBER AND GET NEW PLAYER
     if (!verifyIfDataIsCorrect(player)) {
@@ -88,37 +82,36 @@ const App = () => {
       while (player.id === newID) {
         newID = getRandomIntInclusive();
       }
-      getPlayerData(setPlayer, newID);
-    }
-  };
-
-  const verifyIfDataIsCorrect = (player) => {
-    if (player.detail === "Not found") {
-      return false;
-    } else if (player.value === undefined) {
-      return false;
-    } else if (Array.isArray(player.value) && player.value[0] === "unknown") {
-      return false;
-    } else if (player.value === "unknown") {
-      return false;
-    } else {
+      getPlayerData(setPlayer, newID, setLoading);
       return true;
     }
+    return false;
   };
+
+  const verifyIfDataIsCorrect = (player) =>
+    !(
+      player.detail === "Not found" ||
+      player.value === undefined ||
+      (Array.isArray(player.value) && player.value[0] === "unknown") ||
+      player.value === "unknown"
+    );
 
   const onRerollClick = () => {
     const id1 = getRandomIntInclusive();
     const id2 = getRandomIntInclusive();
 
     setUnit(playersType === "people" ? "mess" : "crew");
-    getPlayerData(setPlayer1, id1);
-    getPlayerData(setPlayer2, id2);
+    getPlayerData(setPlayer1, id1, setIsPlayer1Loading);
+    getPlayerData(setPlayer2, id2, setIsPlayer2Loading);
   };
 
   const handleSelectChange = (event) => {
     setPlayersType(event.target.value);
   };
 
+  console.log("1", result);
+  console.log("2", !isLoading);
+  console.log("3", Boolean(result && !isLoading));
   return (
     <Layout>
       <SelectPlayersType
@@ -126,19 +119,42 @@ const App = () => {
         type={playersType}
         handleChange={handleSelectChange}
       />
-      {isLoading && <ClipLoader color="red" loading={isLoading} size={100} />}
+      <WhoWon
+        player1={player1}
+        player2={player2}
+        unit={unit}
+        score={score}
+        setScore={setScore}
+        verifyIfDataIsCorrect={verifyIfDataIsCorrect}
+        result={result}
+        setResult={setResult}
+        isLoading={isLoading}
+      />
+      {isLoading && (
+        <div
+          style={{
+            height: "400px",
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          <ClipLoader color="red" loading={isLoading} size={100} />
+        </div>
+      )}
       {!isLoading && player1 && player2 && (
         <Cards
-          namePlayer1={player1.name}
-          valuePlayer1={player1.value}
-          namePlayer2={player2.name}
-          valuePlayer2={player2.value}
+          player1={player1}
+          player2={player2}
           unit={unit}
+          result={result}
         />
       )}
-      <PlayButton
-        text={`Roll players ${player1 && player2 ? "again" : ""}!`}
-        onClick={onRerollClick}
+      <Buttons
+        textPlayBtn={`Roll players ${player1 && player2 ? "again" : ""}!`}
+        onClickPlayBtn={onRerollClick}
+        disabledPlayBtn={!playersType}
+        score={score}
+        onClickClearBtn={() => setScore({ player1: 0, player2: 0 })}
       />
     </Layout>
   );

@@ -1,14 +1,7 @@
 import PlayersCard from "./PlayersCard";
-import WhoWon from "./WhoWon";
 import Box from "@mui/material/Box";
 
-const Cards = ({
-  namePlayer1,
-  valuePlayer1,
-  namePlayer2,
-  valuePlayer2,
-  unit,
-}) => {
+const Cards = ({ player1, player2, unit, result }) => {
   const convertValue = (valuePlayer) => {
     if (unit === "mess") {
       return valuePlayer;
@@ -18,16 +11,28 @@ const Cards = ({
   };
 
   const groupName = unit === "people" ? "People" : "Starships";
-
+  const nameOfTheWinner = result.replace(" WINS!", "");
   return (
-    <>
-      <WhoWon
-        namePlayer1={namePlayer1}
-        valuePlayer1={valuePlayer1}
-        namePlayer2={namePlayer2}
-        valuePlayer2={valuePlayer2}
-        unit={unit}
-      />
+    <Box
+      sx={{
+        height: "400px",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "start",
+      }}
+    >
+      <Box
+        sx={{
+          backgroundColor: result.includes("TIE!") ? "yellow" : "lightgreen",
+          padding: "20px",
+          marginBottom: "30px",
+          borderRadius: "5px",
+          fontWeight: "bold",
+        }}
+      >
+        {result}
+      </Box>
       <Box
         sx={{
           display: "flex",
@@ -37,20 +42,22 @@ const Cards = ({
         }}
       >
         <PlayersCard
-          title={namePlayer1}
+          title={player1.name}
           subtitle={groupName}
-          content={convertValue(valuePlayer1)}
+          content={convertValue(player1.value)}
           footer={unit.toUpperCase()}
+          nameOfTheWinner={nameOfTheWinner}
         />
         <strong>VS</strong>
         <PlayersCard
-          title={namePlayer2}
+          title={player2.name}
           subtitle={groupName}
-          content={convertValue(valuePlayer2)}
+          content={convertValue(player2.value)}
           footer={unit.toUpperCase()}
+          nameOfTheWinner={nameOfTheWinner}
         />
       </Box>
-    </>
+    </Box>
   );
 };
 
