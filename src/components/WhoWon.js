@@ -7,9 +7,8 @@ const WhoWon = ({
   score,
   setScore,
   verifyIfDataIsCorrect,
-  result,
   setResult,
-  isLoading,
+  tie,
 }) => {
   const previousPlayers = useRef({ player1, player2 });
 
@@ -37,12 +36,12 @@ const WhoWon = ({
 
       if (val < rangeMin) {
         setScore((score) => ({ ...score, player1: score.player1++ }));
-        return player1.name + " WINS!";
+        return player1.name;
       } else if (val >= rangeMax) {
         setScore((score) => ({ ...score, player2: score.player2++ }));
-        return player2.name + " WINS!";
+        return player2.name;
       } else {
-        return "IT'S A TIE!";
+        return tie.text;
       }
     } else {
       rangeMin = Number(player2[0]);
@@ -50,12 +49,12 @@ const WhoWon = ({
       val = Number(player1);
       if (val < rangeMin) {
         setScore((score) => ({ ...score, player2: score.player2++ }));
-        return player2.name + " WINS!";
+        return player2.name;
       } else if (val >= rangeMax) {
         setScore((score) => ({ ...score, player1: score.player1++ }));
-        return player1.name + " WINS!";
+        return player1.name;
       } else {
-        return "IT'S A TIE!";
+        return tie.text;
       }
     }
   };
@@ -74,12 +73,12 @@ const WhoWon = ({
 
     if (val1 > val2) {
       setScore((score) => ({ ...score, player1: score.player1++ }));
-      return player1.name + " WINS!";
+      return player1.name;
     } else if (val1 < val2) {
       setScore((score) => ({ ...score, player2: score.player2++ }));
-      return player2.name + " WINS!";
+      return player2.name;
     } else {
-      return "IT'S A TIE!";
+      return tie.text;
     }
   };
 
@@ -90,7 +89,7 @@ const WhoWon = ({
       const isRangeCrew1 = player1.value.length > 1;
       const isRangeCrew2 = player2.value.length > 1;
       if (isRangeCrew1 && isRangeCrew2) {
-        return "IT'S A TIE!";
+        return tie.text;
       } else if (isRangeCrew1 || isRangeCrew2) {
         return compareValueAndRange(player1.value, player2.value);
       } else {
@@ -100,10 +99,10 @@ const WhoWon = ({
   };
 
   return (
-    <div style={{ display: "flex", fontSize: "32px" }}>
-      <div>{score.player1}</div>
+    <div style={{ display: "flex", fontSize: "32px" }} data-testid="gameScore">
+      {score.player1}
       <span>:</span>
-      <div>{score.player2}</div>
+      {score.player2}
     </div>
   );
 };

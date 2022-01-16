@@ -6,7 +6,11 @@ import Select from "@mui/material/Select";
 
 const SelectPlayersType = ({ description, type, handleChange }) => {
   return (
-    <Box sx={{ minWidth: 150 }} style={{ color: "black" }}>
+    <Box
+      sx={{ minWidth: 150 }}
+      style={{ color: "black" }}
+      data-testid="gameSelect"
+    >
       <FormControl fullWidth>
         <InputLabel id="demo-simple-select-label">{description}</InputLabel>
         <Select

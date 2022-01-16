@@ -18,6 +18,8 @@ const App = () => {
   const [result, setResult] = useState("");
 
   const isLoading = isPlayer1Loading || isPlayer2Loading;
+  const tie = { bgColor: "yellow", text: "IT'S A TIE!" };
+  const winner = { bgColor: "lightgreen", text: " WINS!" };
 
   useEffect(() => {
     playersType && getData();
@@ -108,10 +110,6 @@ const App = () => {
   const handleSelectChange = (event) => {
     setPlayersType(event.target.value);
   };
-
-  console.log("1", result);
-  console.log("2", !isLoading);
-  console.log("3", Boolean(result && !isLoading));
   return (
     <Layout>
       <SelectPlayersType
@@ -126,9 +124,8 @@ const App = () => {
         score={score}
         setScore={setScore}
         verifyIfDataIsCorrect={verifyIfDataIsCorrect}
-        result={result}
         setResult={setResult}
-        isLoading={isLoading}
+        tie={tie}
       />
       {isLoading && (
         <div
@@ -147,6 +144,8 @@ const App = () => {
           player2={player2}
           unit={unit}
           result={result}
+          tie={tie}
+          winner={winner}
         />
       )}
       <Buttons

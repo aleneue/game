@@ -1,21 +1,23 @@
 import { Card, CardHeader, CardContent, Box, Typography } from "@mui/material";
 
-const PlayersCard = ({ title, subtitle, content, footer, nameOfTheWinner }) => {
+const PlayersCard = ({ name, group, value, unit, result, winner }) => {
   return (
     <Card
       sx={{
         width: 250,
         height: 300,
-        backgroundColor: title === nameOfTheWinner ? "lightgreen" : "white",
+        backgroundColor: name === result ? winner.bgColor : "white",
       }}
+      data-testid="gamePlayersCard"
     >
       <CardHeader
-        title={title}
-        subheader={subtitle}
+        title={name}
+        subheader={group}
         titleTypographyProps={{ align: "center" }}
         subheaderTypographyProps={{
           align: "center",
         }}
+        data-testid="playersNameAndGroup"
       />
       <CardContent>
         <Box
@@ -27,11 +29,21 @@ const PlayersCard = ({ title, subtitle, content, footer, nameOfTheWinner }) => {
             mt: 3,
           }}
         >
-          <Typography component="h2" variant="h3" color="text.primary">
-            {content}
+          <Typography
+            component="h2"
+            variant="h3"
+            color="text.primary"
+            data-testid="playersValue"
+          >
+            {value}
           </Typography>
-          <Typography variant="h6" color="text.secondary" mt={4}>
-            {footer}
+          <Typography
+            variant="h6"
+            color="text.secondary"
+            mt={4}
+            data-testid="playersUnit"
+          >
+            {unit}
           </Typography>
         </Box>
       </CardContent>

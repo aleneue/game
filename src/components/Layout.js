@@ -11,7 +11,7 @@ const Layout = ({ children }) => {
         height: "100vh",
       }}
     >
-      <h1>Let's play the GAME!</h1>
+      <h1 data-testid="gameHeader">Let's play the GAME!</h1>
       {children}
     </Box>
   );

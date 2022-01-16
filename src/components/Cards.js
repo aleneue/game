@@ -1,7 +1,7 @@
 import PlayersCard from "./PlayersCard";
 import Box from "@mui/material/Box";
 
-const Cards = ({ player1, player2, unit, result }) => {
+const Cards = ({ player1, player2, unit, result, tie, winner }) => {
   const convertValue = (valuePlayer) => {
     if (unit === "mess") {
       return valuePlayer;
@@ -11,7 +11,6 @@ const Cards = ({ player1, player2, unit, result }) => {
   };
 
   const groupName = unit === "people" ? "People" : "Starships";
-  const nameOfTheWinner = result.replace(" WINS!", "");
   return (
     <Box
       sx={{
@@ -21,17 +20,19 @@ const Cards = ({ player1, player2, unit, result }) => {
         alignItems: "center",
         justifyContent: "start",
       }}
+      data-testid="gameCards"
     >
       <Box
         sx={{
-          backgroundColor: result.includes("TIE!") ? "yellow" : "lightgreen",
+          backgroundColor: result === tie.text ? tie.bgColor : winner.bgColor,
           padding: "20px",
           marginBottom: "30px",
           borderRadius: "5px",
           fontWeight: "bold",
         }}
+        data-testid="result"
       >
-        {result}
+        {result === tie.text ? result : result + winner.text}
       </Box>
       <Box
         sx={{
@@ -42,19 +43,21 @@ const Cards = ({ player1, player2, unit, result }) => {
         }}
       >
         <PlayersCard
-          title={player1.name}
-          subtitle={groupName}
-          content={convertValue(player1.value)}
-          footer={unit.toUpperCase()}
-          nameOfTheWinner={nameOfTheWinner}
+          name={player1.name}
+          group={groupName}
+          value={convertValue(player1.value)}
+          unit={unit.toUpperCase()}
+          result={result}
+          winner={winner}
         />
         <strong>VS</strong>
         <PlayersCard
-          title={player2.name}
-          subtitle={groupName}
-          content={convertValue(player2.value)}
-          footer={unit.toUpperCase()}
-          nameOfTheWinner={nameOfTheWinner}
+          name={player2.name}
+          group={groupName}
+          value={convertValue(player2.value)}
+          unit={unit.toUpperCase()}
+          result={result}
+          winner={winner}
         />
       </Box>
     </Box>
