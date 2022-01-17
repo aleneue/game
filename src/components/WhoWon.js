@@ -29,10 +29,10 @@ const WhoWon = ({
     let rangeMax;
     let val;
 
-    if (player1.length > 1) {
-      rangeMin = Number(player1[0]);
-      rangeMax = Number(player1[1]);
-      val = Number(player2);
+    if (player1.value.length > 1) {
+      rangeMin = Number(player1.value[0]);
+      rangeMax = Number(player1.value[1]);
+      val = Number(player2.value[0]);
 
       if (val < rangeMin) {
         setScore((score) => ({ ...score, player1: score.player1++ }));
@@ -44,9 +44,9 @@ const WhoWon = ({
         return tie.text;
       }
     } else {
-      rangeMin = Number(player2[0]);
-      rangeMax = Number(player2[1]);
-      val = Number(player1);
+      rangeMin = Number(player2.value[0]);
+      rangeMax = Number(player2.value[1]);
+      val = Number(player1.value[0]);
       if (val < rangeMin) {
         setScore((score) => ({ ...score, player2: score.player2++ }));
         return player2.name;
@@ -91,7 +91,7 @@ const WhoWon = ({
       if (isRangeCrew1 && isRangeCrew2) {
         return tie.text;
       } else if (isRangeCrew1 || isRangeCrew2) {
-        return compareValueAndRange(player1.value, player2.value);
+        return compareValueAndRange(player1, player2);
       } else {
         return compareValues(player1, player2);
       }
