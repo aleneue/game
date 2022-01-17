@@ -4,7 +4,7 @@ import SelectPlayersType from "./components/SelectPlayersType";
 import Layout from "./components/Layout";
 import WhoWon from "./components/WhoWon";
 import Buttons from "./components/Buttons";
-import ClipLoader from "react-spinners/ClipLoader";
+import LoadingSpinner from "./components/LoadingSpinner";
 
 const App = () => {
   const [player1, setPlayer1] = useState();
@@ -16,6 +16,7 @@ const App = () => {
   const [unit, setUnit] = useState("");
   const [score, setScore] = useState({ player1: 0, player2: 0 });
   const [result, setResult] = useState("");
+  const [error, setError] = useState("");
 
   const isLoading = isPlayer1Loading || isPlayer2Loading;
   const tie = { bgColor: "yellow", text: "IT'S A TIE!" };
@@ -42,8 +43,9 @@ const App = () => {
               .replace("/", "");
             setPlayersMaxId(Number(findMaxId));
           })
-          .catch((err) => console.log("err", err));
-      });
+          .catch((err) => setError(err));
+      })
+      .catch((err) => setError(err));
   };
 
   const getPlayerData = (setPlayer, id, setLoading) => {
@@ -66,7 +68,7 @@ const App = () => {
           setLoading(false);
         }
       })
-      .catch((error) => console.log("ERROR", error));
+      .catch((err) => setError(err));
   };
 
   const getRandomIntInclusive = () => {
@@ -127,18 +129,9 @@ const App = () => {
         setResult={setResult}
         tie={tie}
       />
-      {isLoading && (
-        <div
-          style={{
-            height: "400px",
-            display: "flex",
-            alignItems: "center",
-          }}
-        >
-          <ClipLoader color="red" loading={isLoading} size={100} />
-        </div>
-      )}
-      {!isLoading && player1 && player2 && (
+      {error && <div>Something went wrong. Please, try again later.</div>}
+      {!error && isLoading && <LoadingSpinner isLoading={isLoading} />}
+      {!error && !isLoading && player1 && player2 && (
         <Cards
           player1={player1}
           player2={player2}
@@ -151,7 +144,7 @@ const App = () => {
       <Buttons
         textPlayBtn={`Roll players ${player1 && player2 ? "again" : ""}!`}
         onClickPlayBtn={onRerollClick}
-        disabledPlayBtn={!playersType}
+        disabledPlayBtn={!playersType || error}
         score={score}
         onClickClearBtn={() => setScore({ player1: 0, player2: 0 })}
       />
