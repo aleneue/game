@@ -10,7 +10,7 @@ const Cards = ({ player1, player2, unit, result, tie, winner }) => {
     }
   };
 
-  const groupName = unit === "people" ? "People" : "Starships";
+  const groupName = unit === "mess" ? "People" : "Starships";
   return (
     <Box
       sx={{
