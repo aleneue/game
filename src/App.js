@@ -104,7 +104,7 @@ const App = () => {
     const id1 = getRandomIntInclusive();
     const id2 = getRandomIntInclusive();
 
-    setUnit(playersType === "people" ? "mess" : "crew");
+    setUnit(playersType === "people" ? "mass" : "crew");
     getPlayerData(setPlayer1, id1, setIsPlayer1Loading);
     getPlayerData(setPlayer2, id2, setIsPlayer2Loading);
   };
@@ -112,6 +112,7 @@ const App = () => {
   const handleSelectChange = (event) => {
     setPlayersType(event.target.value);
   };
+
   return (
     <Layout>
       <SelectPlayersType
@@ -144,7 +145,7 @@ const App = () => {
       <Buttons
         textPlayBtn={`Roll players ${player1 && player2 ? "again" : ""}!`}
         onClickPlayBtn={onRerollClick}
-        disabledPlayBtn={!playersType || error}
+        disabledPlayBtn={Boolean(!playersType || error)}
         score={score}
         onClickClearBtn={() => setScore({ player1: 0, player2: 0 })}
       />

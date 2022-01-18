@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import Buttons from "./Buttons";
+import Buttons from "../components/Buttons";
 
 it("renders only PlayButton from Buttons component with initial score", () => {
   render(<Buttons score={{ player1: 0, player2: 0 }} />);

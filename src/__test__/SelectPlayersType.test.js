@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import SelectPlayersType from "./SelectPlayersType";
+import SelectPlayersType from "../components/SelectPlayersType";
 
 it("renders SelectPlayersType component", () => {
   render(<SelectPlayersType type="" />);

@@ -83,7 +83,7 @@ const WhoWon = ({
   };
 
   const countScore = () => {
-    if (unit === "mess") {
+    if (unit === "mass") {
       return compareValues(player1, player2);
     } else if (unit === "crew") {
       const isRangeCrew1 = player1.value.length > 1;

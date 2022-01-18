@@ -3,14 +3,14 @@ import Box from "@mui/material/Box";
 
 const Cards = ({ player1, player2, unit, result, tie, winner }) => {
   const convertValue = (valuePlayer) => {
-    if (unit === "mess") {
+    if (unit === "mass") {
       return valuePlayer;
     } else if (unit === "crew" && Array.isArray(valuePlayer)) {
       return valuePlayer.length > 1 ? valuePlayer.join("-") : valuePlayer[0];
     }
   };
 
-  const groupName = unit === "mess" ? "People" : "Starships";
+  const groupName = unit === "mass" ? "People" : "Starships";
   return (
     <Box
       sx={{

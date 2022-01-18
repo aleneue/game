@@ -1,12 +1,12 @@
 import { render, screen } from "@testing-library/react";
-import Cards from "./Cards";
+import Cards from "../components/Cards";
 
 it("renders Cards component", () => {
   render(
     <Cards
       player1={{ id: 2, name: "xyz", value: "10", detail: undefined }}
       player2={{ id: 10, name: "abc", value: "50", detail: undefined }}
-      unit="mess"
+      unit="mass"
       result="abc"
       tie={{ bgColor: "yellow", text: "IT'S A TIE" }}
       winner={{ bgColor: "lightgreen", text: " WINS!" }}
@@ -22,7 +22,7 @@ it("renders Cards component and display winner correctly", () => {
     <Cards
       player1={{ id: 2, name: "xyz", value: "10", detail: undefined }}
       player2={{ id: 10, name: "abc", value: "50", detail: undefined }}
-      unit="mess"
+      unit="mass"
       result="abc"
       tie={{ bgColor: "yellow", text: "IT'S A TIE!" }}
       winner={winner}
@@ -39,7 +39,7 @@ it("renders Cards component and display tie correctly", () => {
     <Cards
       player1={{ id: 2, name: "xyz", value: "50", detail: undefined }}
       player2={{ id: 10, name: "abc", value: "50", detail: undefined }}
-      unit="mess"
+      unit="mass"
       result="IT'S A TIE!"
       tie={tie}
       winner={{ bgColor: "lightgreen", text: " WINS!" }}

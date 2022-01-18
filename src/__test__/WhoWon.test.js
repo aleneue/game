@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import WhoWon from "./WhoWon";
+import WhoWon from "../components/WhoWon";
 
 it("renders WhoWon component", () => {
   render(<WhoWon score={{ player1: 0, player2: 0 }} />);

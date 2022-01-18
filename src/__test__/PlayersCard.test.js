@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import PlayersCard from "./PlayersCard";
+import PlayersCard from "../components/PlayersCard";
 
 it("renders PlayersCard component", () => {
   render(<PlayersCard winner={{ bgColor: "lightgreen", text: " WINS!" }} />);
